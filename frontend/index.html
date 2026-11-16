@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>제휴 마케팅 자동화</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>제휴 마케팅 자동화</h1>
+    <span class="sub">트렌드 → 상품 → 링크 → 문구 → 검수·발행 → 성과</span>
+  </header>
+
+  <nav class="steps" aria-label="진행 단계">
+    <ol>
+      <li class="step active" data-step="1"><b>1</b><span>트렌드 수집</span></li>
+      <li class="step" data-step="2"><b>2</b><span>필터·상품 매칭</span></li>
+      <li class="step" data-step="3"><b>3</b><span>제휴 링크</span></li>
+      <li class="step" data-step="4"><b>4</b><span>추천 문구</span></li>
+      <li class="step human" data-step="5"><b>5</b><span>검수·복사·발행</span></li>
+      <li class="step" data-step="6"><b>6</b><span>성과 기록</span></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>1. 트렌드 키워드 수집</h2>
+          <p class="muted">구글 트렌드 · 네이버 데이터랩 · 쿠팡 골드박스</p>
+        </div>
+        <button id="btn-collect" class="btn primary" type="button">지금 수집</button>
+      </div>
+
+      <div id="source-status" class="source-grid" aria-live="polite"></div>
+      <p id="run-info" class="muted small"></p>
+      <p id="error" class="error" hidden></p>
+    </section>
+
+    <section id="results" class="results"></section>
+  </main>
+
+  <template id="tpl-source-card">
+    <div class="source-card">
+      <div class="source-name"></div>
+      <span class="badge"></span>
+      <div class="source-msg muted small"></div>
+    </div>
+  </template>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

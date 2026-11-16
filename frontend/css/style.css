@@ -1,0 +1,178 @@
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --card: #f2efe9;
+  --border: #d9d4ca;
+  --text: #2b2a27;
+  --muted: #6f6b63;
+  --accent: #2f6f5e;
+  --accent-soft: #e1f2ec;
+  --warn: #9a6b12;
+  --warn-soft: #fbf0d9;
+  --danger: #a83a32;
+  --danger-soft: #fbe5e2;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  padding: 20px 24px 8px;
+}
+.topbar h1 { margin: 0; font-size: 22px; }
+.topbar .sub { color: var(--muted); font-size: 13px; }
+
+/* 단계 표시 */
+.steps { padding: 8px 24px 0; }
+.steps ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 13px;
+}
+.step b {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--surface);
+  font-size: 12px;
+}
+.step.active { border-color: var(--accent); color: var(--text); background: var(--surface); }
+.step.active b { background: var(--accent); }
+.step.human { border-style: dashed; }
+
+main { max-width: 1200px; margin: 0 auto; padding: 16px 24px 48px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.panel h2 { margin: 0 0 2px; font-size: 18px; }
+
+.muted { color: var(--muted); margin: 0; }
+.small { font-size: 13px; }
+.error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 18px;
+  font: inherit;
+  cursor: pointer;
+  background: var(--surface);
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+
+/* 소스 상태 */
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 16px 0 8px;
+}
+.source-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+.source-name { font-weight: 600; }
+.source-msg { grid-column: 1 / -1; word-break: break-all; }
+
+.badge {
+  align-self: start;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.badge.ok { background: var(--accent-soft); color: var(--accent); }
+.badge.mock, .badge.skipped { background: var(--warn-soft); color: var(--warn); }
+.badge.failed { background: var(--danger-soft); color: var(--danger); }
+
+/* 결과 */
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.result-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  min-width: 0;
+}
+.result-col h3 { margin: 0 0 10px; font-size: 16px; }
+.result-col ol { margin: 0; padding: 0; list-style: none; }
+.result-col li {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--card);
+}
+.result-col li:first-child { border-top: none; }
+.rank { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.kw { font-weight: 500; overflow-wrap: anywhere; }
+.metric { color: var(--muted); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.metric.up { color: var(--accent); }
+.metric.down { color: var(--danger); }
+.news { grid-column: 2 / -1; font-size: 12px; }
+.news a { color: var(--muted); }
+.empty { color: var(--muted); font-size: 14px; }
+
+@media (max-width: 600px) {
+  .topbar, .steps { padding-left: 16px; padding-right: 16px; }
+  main { padding-left: 16px; padding-right: 16px; }
+  .panel { padding: 16px; }
+}

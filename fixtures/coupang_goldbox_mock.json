@@ -1,0 +1,7 @@
+[
+  {"productId": 900001, "productName": "[MOCK] 접이식 휴대용 제설삽", "productPrice": 23900, "categoryName": "생활용품", "productImage": "", "productUrl": "https://example.com/mock/900001", "isRocket": true},
+  {"productId": 900002, "productName": "[MOCK] 극세사 전기요 싱글", "productPrice": 39800, "categoryName": "가전디지털", "productImage": "", "productUrl": "https://example.com/mock/900002", "isRocket": true},
+  {"productId": 900003, "productName": "[MOCK] 핫팩 대용량 30개입", "productPrice": 12900, "categoryName": "생활용품", "productImage": "", "productUrl": "https://example.com/mock/900003", "isRocket": false},
+  {"productId": 900004, "productName": "[MOCK] 무선 블루투스 이어폰", "productPrice": 45900, "categoryName": "가전디지털", "productImage": "", "productUrl": "https://example.com/mock/900004", "isRocket": true},
+  {"productId": 900005, "productName": "[MOCK] 겨울 기모 롱패딩", "productPrice": 89000, "categoryName": "패션의류", "productImage": "", "productUrl": "https://example.com/mock/900005", "isRocket": false}
+]

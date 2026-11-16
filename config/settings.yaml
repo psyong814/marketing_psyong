@@ -1,0 +1,36 @@
+server:
+  host: 127.0.0.1
+  port: 5000
+  debug: true
+
+http:
+  timeout: 10
+
+storage:
+  db_path: data/marketing.db
+
+collectors:
+  google_trends:
+    enabled: true
+    geo: KR
+    limit: 20
+
+  naver_datalab:
+    enabled: true          # NAVER_CLIENT_ID/SECRET 이 없으면 자동으로 건너뜀
+    days: 14               # 최근 7일 vs 직전 7일 비교
+    categories:            # 네이버 쇼핑 1차 카테고리
+      "50000000": 패션의류
+      "50000001": 패션잡화
+      "50000002": 화장품/미용
+      "50000003": 디지털/가전
+      "50000004": 가구/인테리어
+      "50000005": 출산/육아
+      "50000006": 식품
+      "50000007": 스포츠/레저
+      "50000008": 생활/건강
+      "50000009": 여가/생활편의
+
+  coupang_goldbox:
+    enabled: true          # 쿠팡 키가 없으면 Mock 데이터 사용
+    sub_id: goldbox
+    limit: 20
