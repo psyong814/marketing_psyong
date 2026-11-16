@@ -2,3 +2,5 @@ flask>=3.0
 httpx>=0.27
 python-dotenv>=1.0
 PyYAML>=6.0
+playwright>=1.49        # 카카오 선물하기 자동화 (PC 에 설치된 Chrome 사용)
+keyring>=25             # 카카오 비밀번호 → Windows 자격 증명 관리자

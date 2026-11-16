@@ -1,31 +1,30 @@
-import json
+"""쿠팡 골드박스(오늘의 특가) 수집기 — 현재 미사용.
+
+쿠팡 파트너스 API 승인 후 collectors/__init__.py 의 ALL_COLLECTORS 에 다시 추가하고,
+설정 화면에 쿠팡 키 입력 항목(env_store.FIELDS)을 되살리면 된다.
+"""
 
 from backend.affiliates.coupang_client import CoupangClient
-from backend.settings import ROOT, env
+from backend.settings import env
 
 from .base import Collector, Trend
 
-MOCK_FILE = ROOT / "fixtures" / "coupang_goldbox_mock.json"
-
 
 class CoupangGoldboxCollector(Collector):
-    """쿠팡 골드박스(오늘의 특가). 키가 없으면 fixtures 의 Mock 데이터를 사용."""
-
     name = "coupang_goldbox"
     label = "쿠팡 골드박스"
 
-    def is_mock(self) -> bool:
-        return not (env("COUPANG_ACCESS_KEY") and env("COUPANG_SECRET_KEY"))
-
-    def _load(self) -> list[dict]:
-        if self.is_mock():
-            return json.loads(MOCK_FILE.read_text(encoding="utf-8"))
-        client = CoupangClient(env("COUPANG_ACCESS_KEY"), env("COUPANG_SECRET_KEY"), timeout=self.timeout)
-        return client.goldbox(self.conf.get("sub_id"))
+    def skip_reason(self) -> str | None:
+        reason = super().skip_reason()
+        if reason:
+            return reason
+        if not (env("COUPANG_ACCESS_KEY") and env("COUPANG_SECRET_KEY")):
+            return "쿠팡 파트너스 API 키 없음"
+        return None
 
     def fetch(self) -> list[Trend]:
-        products = self._load()
-        mock = self.is_mock()
+        client = CoupangClient(env("COUPANG_ACCESS_KEY"), env("COUPANG_SECRET_KEY"), timeout=self.timeout)
+        products = client.goldbox(self.conf.get("sub_id"))
         limit = int(self.conf.get("limit", 20))
         return [
             Trend(
@@ -33,7 +32,6 @@ class CoupangGoldboxCollector(Collector):
                 keyword=p.get("productName", ""),
                 rank=rank,
                 extra={
-                    "mock": mock,
                     "product_id": p.get("productId"),
                     "price": p.get("productPrice"),
                     "category": p.get("categoryName"),

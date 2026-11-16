@@ -7,39 +7,197 @@
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-  <header class="topbar">
-    <h1>제휴 마케팅 자동화</h1>
-    <span class="sub">트렌드 → 상품 → 링크 → 문구 → 검수·발행 → 성과</span>
-  </header>
+  <div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>제휴 마케팅 자동화</h1>
+      <span class="sub">트렌드 → 상품 → 링크 → 문구 → 발행 → 성과</span>
+    </div>
 
-  <nav class="steps" aria-label="진행 단계">
-    <ol>
-      <li class="step active" data-step="1"><b>1</b><span>트렌드 수집</span></li>
-      <li class="step" data-step="2"><b>2</b><span>필터·상품 매칭</span></li>
-      <li class="step" data-step="3"><b>3</b><span>제휴 링크</span></li>
-      <li class="step" data-step="4"><b>4</b><span>추천 문구</span></li>
-      <li class="step human" data-step="5"><b>5</b><span>검수·복사·발행</span></li>
-      <li class="step" data-step="6"><b>6</b><span>성과 기록</span></li>
-    </ol>
-  </nav>
+    <nav class="side-nav" aria-label="진행 단계">
+      <p class="nav-label">진행 단계</p>
+      <ol>
+        <li><button class="step nav-item" type="button" data-step="1"><b>1</b><span>트렌드 수집</span></button></li>
+        <li><button class="step nav-item" type="button" data-step="2"><b>2</b><span>필터·상품 매칭</span></button></li>
+        <li><button class="step nav-item" type="button" data-step="3"><b>3</b><span>제휴 링크 확정</span></button></li>
+        <li><button class="step nav-item soon" type="button" data-step="4"><b>4</b><span>추천 문구</span><em>준비 중</em></button></li>
+        <li><button class="step nav-item soon human" type="button" data-step="5"><b>5</b><span>검수·복사·발행</span><em>준비 중</em></button></li>
+        <li><button class="step nav-item soon" type="button" data-step="6"><b>6</b><span>성과 기록</span><em>준비 중</em></button></li>
+      </ol>
 
-  <main>
-    <section class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>1. 트렌드 키워드 수집</h2>
-          <p class="muted">구글 트렌드 · 네이버 데이터랩 · 쿠팡 골드박스</p>
+      <p class="nav-label">관리</p>
+      <button id="btn-kakao" class="nav-item" type="button"><b>🎁</b><span>카카오 상품</span></button>
+      <button id="btn-settings" class="nav-item" type="button"><b>⚙</b><span>시스템 설정</span></button>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <!-- ===== 1단계 ===== -->
+    <div class="view" data-view="1">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>1. 트렌드 키워드 수집</h2>
+            <p class="muted">구글 트렌드 · 시즌 키워드 · 카카오 선물하기 상품</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn btn-reset" type="button" data-reset="1">초기화</button>
+            <button id="btn-collect" class="btn primary" type="button">지금 수집</button>
+          </div>
         </div>
-        <button id="btn-collect" class="btn primary" type="button">지금 수집</button>
+        <div id="source-status" class="source-grid" aria-live="polite"></div>
+        <p id="run-info" class="muted small"></p>
+        <p id="error-1" class="error" hidden></p>
+      </section>
+      <section id="results" class="results"></section>
+    </div>
+
+    <!-- ===== 2단계 ===== -->
+    <div class="view" data-view="2" hidden>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>2. 키워드 필터 · 상품 매칭</h2>
+            <p class="muted">금칙어 제외 → 상품성 판별 → 상품 검색</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn btn-reset" type="button" data-reset="2">초기화</button>
+            <button id="btn-filter" class="btn primary" type="button">필터·매칭 실행</button>
+          </div>
+        </div>
+        <div class="engine-row">
+          <span class="muted small">판별 엔진</span>
+          <span id="engine-badge" class="badge"></span>
+          <span id="engine-note" class="muted small"></span>
+        </div>
+        <div id="filter-stats" class="stats"></div>
+        <p id="filter-info" class="muted small"></p>
+        <ul id="filter-warnings" class="warnings"></ul>
+        <p id="error-2" class="error" hidden></p>
+      </section>
+
+      <section id="keyword-grid" class="kw-grid"></section>
+
+      <details id="excluded" class="panel excluded" hidden>
+        <summary>제외된 키워드 <span id="excluded-count"></span></summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>키워드</th><th>출처</th><th>점수</th><th>이유</th></tr></thead>
+            <tbody id="excluded-body"></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- ===== 3단계 ===== -->
+    <div class="view" data-view="3" hidden>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>3. 제휴 링크 확정</h2>
+            <p class="muted">키워드마다 홍보할 카카오 선물하기 상품을 고르고 확정합니다. 확정한 링크로 4단계 문구를 만듭니다.</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn btn-reset" type="button" data-reset="3">초기화</button>
+            <button id="btn-links-build" class="btn primary" type="button">후보 만들기</button>
+          </div>
+        </div>
+        <div id="links-stats" class="stats"></div>
+        <p id="links-info" class="muted small"></p>
+        <details id="links-skipped" class="skipped-box" hidden>
+          <summary>상품이 겹쳐 후보에서 빠진 키워드 <span id="links-skipped-count"></span>개</summary>
+          <ul id="links-skipped-list"></ul>
+          <p class="muted small">같은 링크를 여러 키워드로 반복 홍보하지 않도록 뺐습니다. 이 키워드도 쓰고 싶으면 🎁 카카오 상품에서 관련 상품에 태그를 넣어 후보를 늘려 주세요.</p>
+        </details>
+        <p id="links-stale" class="warn-box" hidden>2단계 분석이 새로 실행되었습니다. [후보 만들기]를 눌러 최신 결과로 다시 만드세요.</p>
+        <p class="muted small">
+          ※ 링크가 살아 있는지 확인하려고 프로그램이 링크를 직접 열지는 않습니다.
+          내 제휴 링크를 직접 누르면 클릭 수가 늘어 큐레이터 실적 통계가 왜곡될 수 있어, 형식만 확인합니다.
+          상품 확인은 '상품 페이지'로 하세요.
+        </p>
+        <p id="error-3" class="error" hidden></p>
+      </section>
+
+      <section class="panel links-list">
+        <div class="panel-head">
+          <h3>링크 후보</h3>
+          <label class="check-inline"><input id="links-only-selected" type="checkbox"> 확정한 것만 보기</label>
+        </div>
+        <div class="table-wrap">
+          <table class="links-table">
+            <thead><tr><th>확정</th><th>키워드</th><th></th><th>홍보할 상품</th><th>가격</th><th>제휴 링크 (4단계 문구에 자동 입력)</th></tr></thead>
+            <tbody id="links-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 시스템 설정 ===== -->
+    <div class="view" data-view="settings" hidden>
+      <div class="set-wrap">
+        <h2 class="set-title">⚙ 시스템 설정</h2>
+        <p id="error-settings" class="error" hidden></p>
+        <div id="settings-groups" class="set-list"></div>
       </div>
+    </div>
 
-      <div id="source-status" class="source-grid" aria-live="polite"></div>
-      <p id="run-info" class="muted small"></p>
-      <p id="error" class="error" hidden></p>
-    </section>
+    <!-- ===== 카카오 선물하기 큐레이터 상품 ===== -->
+    <div class="view" data-view="kakao" hidden>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>🎁 카카오 선물하기 큐레이터 상품</h2>
+            <p class="muted">크롬으로 선물하기에 로그인 → 큐레이터 → 상품별 [링크 생성]을 눌러 링크를 모읍니다. 모은 상품은 2단계 매칭에 자동으로 쓰입니다.</p>
+          </div>
+        </div>
+        <div class="kakao-controls">
+          <button id="kk-run" class="btn primary" type="button">▶ 실행 (로그인 + 수집)</button>
+          <button id="kk-collect" class="btn" type="button">링크 수집만</button>
+          <button id="kk-stop" class="btn" type="button">■ 중지</button>
+          <button id="kk-close" class="btn" type="button">브라우저 닫기</button>
+          <span class="spacer"></span>
+          <button id="kk-import" class="btn" type="button">예전 수집 결과 가져오기</button>
+        </div>
+        <div class="kakao-status">
+          <span id="kk-dot" class="dot"></span>
+          <span id="kk-step">대기</span>
+          <div class="progress"><span id="kk-bar"></span></div>
+        </div>
+        <p id="kk-account" class="muted small"></p>
+        <p id="error-kakao" class="error" hidden></p>
+        <details class="log-wrap">
+          <summary>진행 로그</summary>
+          <div id="kk-log" class="log-box" aria-live="polite"></div>
+        </details>
+      </section>
 
-    <section id="results" class="results"></section>
+      <section class="panel kakao-list">
+        <div class="panel-head">
+          <h3>수집한 상품 <span id="kk-count" class="badge"></span></h3>
+          <div class="head-actions">
+            <input id="kk-filter" class="search" type="search" placeholder="상품명·브랜드·태그 검색">
+            <button id="kk-clear" class="btn btn-reset" type="button">전체 삭제</button>
+          </div>
+        </div>
+        <p class="muted small">태그를 넣어두면 2단계에서 키워드와 더 잘 연결됩니다. 예: <code>수능, 수험생, 합격</code></p>
+        <div class="table-wrap">
+          <table class="kk-table">
+            <thead><tr><th></th><th>상품</th><th>가격</th><th>태그 (쉼표 구분)</th><th>사용</th><th></th></tr></thead>
+            <tbody id="kk-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 3~6단계 ===== -->
+    <div class="view" data-view="soon" hidden>
+      <section class="panel">
+        <h2 id="soon-title"></h2>
+        <p class="muted">아직 만들지 않은 단계입니다. 순서대로 진행할 예정입니다.</p>
+      </section>
+    </div>
   </main>
+  </div>
 
   <template id="tpl-source-card">
     <div class="source-card">

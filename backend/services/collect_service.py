@@ -6,24 +6,28 @@ from backend.collectors import ALL_COLLECTORS
 from backend.storage.db import DB
 
 
-def _build(settings: dict):
+def _build(settings: dict, db: DB):
+    """settings.yaml 에서 enabled: false 인 수집기는 아예 빼고(화면에도 안 보임) 만든다."""
     timeout = settings.get("http", {}).get("timeout", 10)
     conf = settings.get("collectors", {})
-    return [cls(conf.get(cls.name, {}), timeout) for cls in ALL_COLLECTORS]
+    return [
+        cls(conf.get(cls.name, {}), timeout, db)
+        for cls in ALL_COLLECTORS
+        if conf.get(cls.name, {}).get("enabled", True)
+    ]
 
 
-def collector_status(settings: dict) -> list[dict]:
+def collector_status(settings: dict, db: DB) -> list[dict]:
     """수집기별 실행 가능 여부 (프론트의 상태 배지용)."""
     result = []
-    for c in _build(settings):
+    for c in _build(settings, db):
         reason = c.skip_reason()
         result.append(
             {
                 "name": c.name,
                 "label": c.label,
                 "ready": reason is None,
-                "mock": c.is_mock(),
-                "message": reason or ("Mock 데이터 사용 (API 키 없음)" if c.is_mock() else "준비됨"),
+                "message": reason or "준비됨",
             }
         )
     return result
@@ -33,8 +37,8 @@ def run_collect(settings: dict, db: DB) -> dict:
     run_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     sources, collected = [], []
 
-    for c in _build(settings):
-        info = {"name": c.name, "label": c.label, "mock": c.is_mock(), "count": 0}
+    for c in _build(settings, db):
+        info = {"name": c.name, "label": c.label, "count": 0}
         reason = c.skip_reason()
         if reason:
             sources.append({**info, "status": "skipped", "message": reason})
@@ -45,7 +49,10 @@ def run_collect(settings: dict, db: DB) -> dict:
             sources.append({**info, "status": "failed", "message": str(e)})
             continue
         collected.extend(trends)
-        sources.append({**info, "status": "ok", "count": len(trends), "message": "완료"})
+        message = "완료"
+        if not trends and c.name == "kakao_products":
+            message = "저장된 상품이 없습니다. 🎁 카카오 상품에서 [실행]으로 수집하세요."
+        sources.append({**info, "status": "ok", "count": len(trends), "message": message})
 
     db.save_run(run_id, sources, collected)
     return db.latest_run()

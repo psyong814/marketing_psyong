@@ -19,6 +19,22 @@ def _child_text(el: ET.Element, name: str) -> str | None:
     return None
 
 
+HANGUL = re.compile(r"[가-힣]")
+LATIN_OR_DIGIT = re.compile(r"^[\x20-\x7E]+$")
+
+
+def is_korean_trend(keyword: str, news_titles: list[str]) -> bool:
+    """국내 검색어만 남기기.
+    - 키워드에 한글이 있으면 통과
+    - 영문·숫자 키워드(예: tvN, 005930)는 관련 뉴스 제목에 한글이 있을 때만 통과
+    - 그 밖(태국어·러시아어 등 외국어 검색어)은 제외"""
+    if HANGUL.search(keyword):
+        return True
+    if LATIN_OR_DIGIT.match(keyword):
+        return any(HANGUL.search(t or "") for t in news_titles)
+    return False
+
+
 def _parse_traffic(text: str | None) -> float | None:
     """'2,000+' / '20K+' 같은 값을 숫자로."""
     if not text:
@@ -50,8 +66,9 @@ class GoogleTrendsCollector(Collector):
         resp.raise_for_status()
         root = ET.fromstring(resp.content)
 
+        korean_only = bool(self.conf.get("korean_only", True))
         trends: list[Trend] = []
-        for rank, item in enumerate(root.iter("item"), start=1):
+        for item in root.iter("item"):
             title = _child_text(item, "title")
             if not title:
                 continue
@@ -60,12 +77,14 @@ class GoogleTrendsCollector(Collector):
                 for c in item
                 if _local(c.tag) == "news_item"
             ]
+            if korean_only and not is_korean_trend(title, [n["title"] for n in news]):
+                continue
             traffic = _child_text(item, "approx_traffic")
             trends.append(
                 Trend(
                     source=self.name,
                     keyword=title,
-                    rank=rank,
+                    rank=len(trends) + 1,
                     score=_parse_traffic(traffic),
                     extra={"traffic": traffic, "pub_date": _child_text(item, "pubDate"), "news": news[:3]},
                 )

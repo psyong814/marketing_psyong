@@ -44,3 +44,12 @@ class CoupangClient:
 
     def goldbox(self, sub_id: str | None = None) -> list[dict]:
         return self.request("GET", "/products/goldbox", {"subId": sub_id} if sub_id else None) or []
+
+    def search(self, keyword: str, limit: int = 5, sub_id: str | None = None) -> list[dict]:
+        params = {"keyword": keyword, "limit": limit}
+        if sub_id:
+            params["subId"] = sub_id
+        data = self.request("GET", "/products/search", params)
+        if isinstance(data, dict):
+            return data.get("productData") or []
+        return data or []

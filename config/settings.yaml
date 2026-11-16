@@ -2,6 +2,11 @@ server:
   host: 127.0.0.1
   port: 5000
   debug: true
+  reloader: false          # true 면 코드 수정 시 자동 재시작 (카카오 자동화 브라우저가 끊김)
+
+kakao:
+  # 예전 earning_kakao 프로그램의 수집 결과 (화면의 '가져오기' 버튼이 읽는 파일)
+  import_path: C:\project\earning_kakao\data\results.json
 
 http:
   timeout: 10
@@ -9,28 +14,41 @@ http:
 storage:
   db_path: data/marketing.db
 
+# ---------- 1단계: 트렌드 수집 ----------
 collectors:
   google_trends:
     enabled: true
     geo: KR
     limit: 20
+    korean_only: true      # 태국어·러시아어 등 외국어 검색어 제외 (영문 키워드는 한글 뉴스가 있을 때만)
 
-  naver_datalab:
-    enabled: true          # NAVER_CLIENT_ID/SECRET 이 없으면 자동으로 건너뜀
-    days: 14               # 최근 7일 vs 직전 7일 비교
-    categories:            # 네이버 쇼핑 1차 카테고리
-      "50000000": 패션의류
-      "50000001": 패션잡화
-      "50000002": 화장품/미용
-      "50000003": 디지털/가전
-      "50000004": 가구/인테리어
-      "50000005": 출산/육아
-      "50000006": 식품
-      "50000007": 스포츠/레저
-      "50000008": 생활/건강
-      "50000009": 여가/생활편의
+  season_keywords:         # config/season_keywords.yaml 에서 오늘 날짜에 맞는 키워드
+    enabled: true
+    limit: 30
 
-  coupang_goldbox:
-    enabled: true          # 쿠팡 키가 없으면 Mock 데이터 사용
-    sub_id: goldbox
-    limit: 20
+  kakao_products:          # 🎁 카카오 상품에서 수집해 DB 에 저장된 큐레이터 상품 (실제 링크)
+    enabled: true
+    limit: 30              # 최대 개수
+    season_first: true     # 오늘 시즌 키워드와 맞는 상품을 먼저, 남는 자리는 최근 구매자 수 순
+
+  # 쿠팡 골드박스는 쿠팡 파트너스 API 승인 후 추가 예정
+
+# ---------- LLM ----------
+llm:
+  # auto : .env 에 GEMINI_API_KEY 가 있으면 gemini, 없으면 rule
+  # gemini / rule : 강제 지정
+  provider: auto
+  gemini:
+    # 버전이 바뀌어도 동작하는 별칭. 화면의 '사용 가능 모델' 목록에서 다른 모델로 바꿀 수 있음
+    model: gemini-flash-lite-latest
+    timeout: 60
+    cache_days: 7          # 같은 키워드 판별 결과를 재사용하는 기간 (무료 한도 절약)
+
+# ---------- 2단계: 필터 · 상품 매칭 ----------
+filter:
+  min_score: 50            # 이 점수 이상인 키워드만 카카오 상품과 매칭
+  products_per_keyword: 3  # 키워드 하나에 붙일 카카오 상품 후보 수
+
+# ---------- 3단계: 제휴 링크 확정 ----------
+links:
+  auto_select: 10          # 후보를 만들 때 점수 높은 순으로 미리 '확정' 체크해 둘 개수
