@@ -1,0 +1,119 @@
+# 시즌 키워드 사전
+# - start / end : MM-DD (start 가 end 보다 크면 연말→연초로 넘어가는 기간)
+# - weight      : 0~100, 높을수록 우선 (2단계 점수로 그대로 사용)
+# - 설날·추석처럼 해마다 날짜가 바뀌는 시즌은 매년 기간을 고쳐 주세요.
+
+seasons:
+  - name: 연말연시
+    start: "12-15"
+    end: "01-05"
+    weight: 80
+    keywords: [새해 다이어리, 연말 파티용품, 신년 선물, 달력]
+
+  - name: 설날
+    start: "01-05"
+    end: "02-15"
+    weight: 85
+    keywords: [설 선물세트, 한우 선물세트, 과일 선물세트, 세뱃돈 봉투]
+
+  - name: 발렌타인데이
+    start: "02-01"
+    end: "02-14"
+    weight: 80
+    keywords: [발렌타인 초콜릿, 커플 선물, 수제 초콜릿 키트]
+
+  - name: 졸업·입학
+    start: "02-01"
+    end: "03-05"
+    weight: 80
+    keywords: [입학 선물, 초등학생 책가방, 대학생 노트북, 졸업 꽃다발]
+
+  - name: 화이트데이
+    start: "03-01"
+    end: "03-14"
+    weight: 75
+    keywords: [화이트데이 사탕, 화이트데이 선물]
+
+  - name: 미세먼지·황사
+    start: "03-01"
+    end: "04-30"
+    weight: 75
+    keywords: [KF94 마스크, 공기청정기, 공기청정기 필터]
+
+  - name: 봄나들이·캠핑
+    start: "03-20"
+    end: "05-31"
+    weight: 70
+    keywords: [캠핑 의자, 피크닉 매트, 원터치 텐트, 캠핑 테이블]
+
+  - name: 가정의 달
+    start: "04-15"
+    end: "05-15"
+    weight: 90
+    keywords: [어린이날 선물, 어버이날 선물, 카네이션, 스승의날 선물, 레고]
+
+  - name: 장마
+    start: "06-15"
+    end: "07-25"
+    weight: 80
+    keywords: [장우산, 제습기, 레인부츠, 습기제거제]
+
+  - name: 무더위·여름휴가
+    start: "06-20"
+    end: "08-25"
+    weight: 85
+    keywords: [선풍기, 휴대용 선풍기, 선크림, 아이스박스, 물놀이 튜브, 쿨매트]
+
+  - name: 개학
+    start: "08-10"
+    end: "09-05"
+    weight: 70
+    keywords: [학용품 세트, 필통, 초등학생 책가방]
+
+  - name: 추석
+    start: "08-25"
+    end: "10-05"
+    weight: 85
+    keywords: [추석 선물세트, 한우 선물세트, 과일 선물세트, 홍삼 선물세트]
+
+  - name: 가을 캠핑
+    start: "09-15"
+    end: "10-31"
+    weight: 70
+    keywords: [캠핑 의자, 화로대, 캠핑 랜턴, 침낭]
+
+  - name: 할로윈
+    start: "10-10"
+    end: "10-31"
+    weight: 65
+    keywords: [할로윈 코스튬, 할로윈 소품, 할로윈 사탕]
+
+  - name: 수능
+    start: "10-25"
+    end: "11-20"
+    weight: 85
+    keywords: [수능 선물, 수험생 간식, 핫팩, 수험생 무릎담요]
+
+  - name: 김장
+    start: "11-01"
+    end: "12-10"
+    weight: 80
+    keywords: [김장 매트, 김장 비닐, 고무장갑, 절임배추]
+
+  - name: 블랙프라이데이
+    start: "11-15"
+    end: "11-30"
+    weight: 75
+    keywords: [블랙프라이데이 특가, 무선 이어폰, 로봇청소기, 에어프라이어]
+
+  - name: 겨울 방한
+    start: "11-01"
+    end: "02-28"
+    weight: 80
+    keywords: [핫팩, 전기요, 롱패딩, 가습기, 전기히터, 방한 장갑]
+
+  - name: 크리스마스
+    start: "11-25"
+    end: "12-25"
+    weight: 85
+    keywords: [크리스마스 트리, 크리스마스 선물, 크리스마스 장식, 산타 의상]
